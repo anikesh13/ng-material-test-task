@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import sha1 from 'sha1';
 import { AuthenticationService } from './../authentication.service';
 
@@ -11,44 +12,55 @@ import { AuthenticationService } from './../authentication.service';
 export class SignupComponent implements OnInit {
   pwdHide: boolean = true;
   pwdValidation: boolean = false;
+  signupForm: FormGroup;
 
-  signupForm = new FormGroup({
-    email: new FormControl('', [
-      Validators.required,
-      Validators.email,
-    ]),
-    password: new FormControl('', [
-      Validators.required,
-      Validators.minLength(6)
-    ]),
-    cardName: new FormControl(''),
-    cardNumber: new FormControl(''),
-    cardExp: new FormControl(''),
-    cardCode: new FormControl('')
-  });
-
-
-  constructor(private auth: AuthenticationService) { }
+  constructor(private auth: AuthenticationService,
+    private formBuilder: FormBuilder,
+    private _snackBar: MatSnackBar) { }
 
   ngOnInit() {
+    this.signupForm = this.formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      cardName: ['', []],
+      cardNumber: ['', [[Validators.maxLength(16)]]],
+      cardExp: ['', []],
+      cardCode: ['', []]
+    });
   }
 
+  get formData() { return this.signupForm.controls; }
+
   signUp() {
-    let hash = sha1(this.signupForm.value.pwdFormControl);
+    console.log(this.signupForm.value.password);
+
+    let hash = sha1(this.signupForm.value.password);
     hash = hash.slice(0, 5);
     this.auth.getData(hash).subscribe(res => {
       if (res) {
         let makeArray = res.split("\n");
+
         for (let index = 0; index < makeArray.length; index++) {
           makeArray[index] = makeArray[index].split(":").pop();
         }
         makeArray.sort(this.sortNumber);
+
         if (makeArray[makeArray.length - 1] >= 500) {
           console.log(makeArray[makeArray.length - 1]);
+          this._snackBar.open('This password is not Secure. Please choose another one', 'X', {
+            duration: 4000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          });
           return !this.pwdValidation;
+        } else {
+          this._snackBar.open('Signup Successfully', 'X', {
+            duration: 4000,
+            horizontalPosition: "right",
+            verticalPosition: "top"
+          });
+          return this.pwdValidation;
         }
-      } else {
-        return this.pwdValidation;
       }
     })
   }
