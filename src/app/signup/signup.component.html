@@ -4,7 +4,7 @@
             <mat-card-title>Signup form</mat-card-title>
         </mat-card-header>
 
-        <form class="signup-profile-form" [formGroup]="signupForm" (ngSubmit)="signUp()" autocomplete="off">
+        <form class="signup-profile-form" [formGroup]="signupForm">
 
             <mat-form-field>
                 <input matInput placeholder="Email" formControlName="email" required>
@@ -16,14 +16,15 @@
 
             <mat-form-field>
                 <input matInput placeholder="Enter your password" formControlName="password"
-                    [type]="pwdHide ? 'password' : 'text'" required >
+                    [type]="pwdHide ? 'password' : 'text'" required>
                 <button mat-icon-button matSuffix (click)="pwdHide = !pwdHide" [attr.aria-label]="'Hide password'"
                     [attr.aria-pressed]="pwdHide">
                     <mat-icon>{{pwdHide ? 'visibility_off' : 'visibility'}}</mat-icon>
                 </button>
                 <mat-error *ngIf="formData.password.errors">
                     <mat-error *ngIf="formData.password.errors.required">Password is required</mat-error>
-                    <mat-error *ngIf="formData.password.errors.minlength">Password must be at least 6 characters</mat-error>
+                    <mat-error *ngIf="formData.password.errors.minlength">Password must be at least 6 characters
+                    </mat-error>
                 </mat-error>
             </mat-form-field>
 
@@ -44,7 +45,8 @@
             </mat-form-field>
 
             <div class="signup-submit-button">
-                <button mat-raised-button color="primary" [disabled]="!signupForm.valid">Sign Up</button>
+                <button mat-raised-button color="primary" [disabled]="!signupForm.valid" (click)="signUp()">Sign
+                    Up</button>
             </div>
         </form>
     </mat-card>
