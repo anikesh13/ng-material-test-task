@@ -23,7 +23,7 @@ export class SignupComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       cardName: ['', []],
-      cardNumber: ['', [[Validators.maxLength(16)]]],
+      cardNumber: ['',[]],
       cardExp: ['', []],
       cardCode: ['', []]
     });
