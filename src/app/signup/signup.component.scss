@@ -1,9 +1,20 @@
-.example-form {
+.signup-form {
+  display: flex;
+  height: 100vh;
+  align-items: center;
+  background: url("/assets/images/nature.jpeg");
+
+  .signup-card {
+    width: 30%;
+    margin: 0 auto;
+  }
+
+  .signup-profile-form {
     display: flex;
     flex-direction: column;
   }
-  
-  .example-full-width {
-    width: 100%;
+
+  .signup-submit-button {
+    margin: 0 auto;
   }
-  
+}
